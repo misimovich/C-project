@@ -1,4 +1,5 @@
 ﻿#include "functions.h"
+#include<SFML/Graphics.hpp>
 using namespace std;
 #define MAX 100000
 

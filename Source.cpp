@@ -1,12 +1,10 @@
 ﻿#include<SFML/Graphics.hpp>
 #include<SFML/Window.hpp>
 #include"algorithm.h"
+#include "constants.h"
 using namespace std;
 using namespace sf;
 bool _list[num][num];
-#define MAX 100000
-int scale = 30;
-
 
 
 struct grid_cell {
@@ -16,32 +14,30 @@ struct grid_cell {
     };
 };
 
-
 int main() {
     int visited[num][num];      
-    int grid[20][20];      
-    for (int i = 0; i < 20; i++)
-        for (int j = 0; j < 20; j++) {
-            if (i == 0 || i == 19 || j == 0 || j == 19)        
+    int grid[grid_size][grid_size];
+    for (int i = 0; i < grid_size; i++)
+        for (int j = 0; j < grid_size; j++) {
+            if (i == 0 || i == grid_size - 1 || j == 0 || j == grid_size - 1)
                 grid[i][j] = 0;
             else
                 grid[i][j] = 1;
         }
-    for (int i = 0; i < 20; i++)
-        for (int j = 0; j < 20; j++) {
+    for (int i = 0; i < grid_size; i++)
+        for (int j = 0; j < grid_size; j++) {
             explored[i][j] = false;   
             visited[i][j] = 0;     
         }
-
-    int begin_x = 2, begin_y = 2, end_x = 15, end_y = 17;      
+  
     Thread thread_draw_djikstra(std::bind(&dijkstra_algorithm, begin_x, begin_y, end_x, end_y, grid));
 
-    RenderWindow window(VideoMode(700, 600), "Shortest_path");
+    RenderWindow window(VideoMode(width, height), "Shortest_path");
 
     sf::Font font;
-    RectangleShape buttonStart(Vector2f(25, 25));       
+    RectangleShape buttonStart(Vector2f(button_size, button_size));
     buttonStart.setFillColor(Color::Green);
-    RectangleShape display(Vector2f(75, 25));      
+    RectangleShape display(Vector2f(display_width, display_height));
     display.setFillColor(Color::White);
 
     RectangleShape rectangle(Vector2f(scale, scale));                           //рисует квадраты фона
@@ -85,16 +81,16 @@ int main() {
                 else if (row < num && column < num)
                     grid[row][column] = 0;
                 
-                if (X > 600 && X < 675 && Y>0 && Y < 25) {
+                if (X > height && X < width - display_width && Y>0 && Y < display_height) {
                     thread_draw_djikstra.launch();
                   
                 }
             }
         }
         window.clear();
-        buttonStart.setPosition(600, 0);
+        buttonStart.setPosition(height, 0);
         window.draw(buttonStart);      
-        display.setPosition(725, 0);     
+        display.setPosition(width + display_height, 0);     
         window.draw(display);
       
 
@@ -111,8 +107,8 @@ int main() {
         end_rectangle.setPosition(end_y * scale, end_x * scale);
         window.draw(end_rectangle);      
         visited[end_x][end_y] = 1;
-        for (int i = 0; i <= 590; i += scale)
-            for (int j = 0; j <= 590; j += scale) {
+        for (int i = 0; i <= height - 10; i += scale)
+            for (int j = 0; j <= height - 10; j += scale) {
 
                 if (grid[i / scale][j / scale] == 1 && explored[i / scale][j / scale] == false && _list[i / scale][j / scale] == false && visited[i / scale][j / scale] == 0) {     
                     rectangle.setOutlineThickness(2);
