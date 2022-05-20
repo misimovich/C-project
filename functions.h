@@ -8,7 +8,7 @@
 using namespace std;
 using namespace sf;
 typedef pair<int, int> Point;
-vector<pair<int, int>> path;        
+vector<pair<int, int>> path;
 bool explored[num][num];
 
 
@@ -22,6 +22,7 @@ void find_minimal(float dist[num][num], int& min_x, int& min_y) {
                 min_y = j;
             }
 }
+
 bool reached_end(int row, int col, Point end) {
     if (row == end.first && col == end.second)
         return true;
