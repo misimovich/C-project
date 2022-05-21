@@ -81,7 +81,7 @@ int main() {
                 else if (row < num && column < num)
                     grid[row][column] = 0;
 
-                if (X > height && X < width - display_width && Y>0 && Y < display_height) {
+                if (path.size() == 0 && X > height && X < width - display_width && Y>0 && Y < display_height) {
 
                     for (int i = 0; i < grid_size; i++)
                         for (int j = 0; j < grid_size; j++) {
@@ -91,6 +91,21 @@ int main() {
                     thread_draw_djikstra.launch();
 
                 }
+                if (path.size() != 0 && X > height && X < width - display_width && Y>0 && Y < display_height) {
+
+                    path.clear();               
+                    for (int i = 0; i < grid_size; i++)
+                        for (int j = 0; j < grid_size; j++) {
+                            explored[i][j] = false;
+                            visited[i][j] = 0;
+                            if (i == 0 || i == grid_size - 1 || j == 0 || j == grid_size - 1)
+                                grid[i][j] = 0;
+                            else
+                                grid[i][j] = 1;
+                        }
+                   
+                }
+
             }
         }
         window.clear();
@@ -107,6 +122,7 @@ int main() {
                 visited[path[i].first][path[i].second] = 1;
             }
         }
+      
         start_rectangle.setPosition(begin_y * scale, begin_x * scale);
         window.draw(start_rectangle);
         visited[begin_x][begin_y] = 1;
